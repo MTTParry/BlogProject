@@ -1,37 +1,26 @@
 import { useState } from "react";
-
+const emptyPost = {
+  title: "",
+  comic_name: "",
+  comic_url: "",
+  blog_content: "",
+  top_image: "",
+  mid_image: "",
+  genre: "",
+  rating: "",
+}
 const BlogForm = (props) => {
-  const [post, setPost] = useState({
-    title: "",
-    comic_name: "",
-    comic_url: "",
-    blog_content: "",
-    top_image: "",
-    mid_image: "",
-    genre: "",
-    rating: "",
-  });
+  const [post, setPost] = useState(emptyPost);
+  console.log(post)
 
   //create functions that handle the event of the user typing into the form
-  const handleTitleChange = (event) => {
-    const title = event.target.value;
-    setPost((post) => ({ ...post, title }));
-  };
-
-  const handleComicNameChange = (event) => {
-    const comic_name = event.target.value;
-    setPost((post) => ({ ...post, comic_name }));
-  };
-
-  const handleComicUrlChange = (event) => {
-    const comic_url = event.target.value;
-    setPost((post) => ({ ...post, comic_url }));
-  };
-
-  const handleBlogContentChange = (event) => {
-    const blog_content = event.target.value;
-    setPost((post) => ({ ...post, blog_content }));
-  };
+  const handleChange = (event) => {
+    // As long as <InputTextField name="XXXXXX"> is the same as the Key in the `post` object, it'll update it
+    const name = event.target.name
+    const value = event.target.value
+    // no idea why [name] works, but it does
+    setPost((post) => ({ ...post, [name]: value }));
+  }
 
   const handleTopImageChange = (event) => {
     const top_image = event.target.value;
@@ -74,54 +63,24 @@ const BlogForm = (props) => {
     postBlogPost(post);
   };
 
+  // name === key of field you want to change
+  const textFields = [
+    { label:"Post Title", name:"title", placeholder:"Post Title", value:post.title},
+    { label:"Comic Name", name:"comic_name", placeholder:"Comic by Person", value:post.comic_name},
+    { label:"Comic 1st Episode URL", name:"comic_url", placeholder:"1st Episode URL", value:post.comic_url},
+    { label:"Blog Text", name:"blog_content", placeholder:". . .", value:post.blog_content}
+  ]
+
   return (
     <form onSubmit={handleSubmit}>
       <h3>New Blog Post</h3>
       <fieldset>
-        <label>Post Title</label>
-        <br />
-        <input
-          type="text"
-          id="add-post-title"
-          placeholder="Post Title"
-          required
-          value={post.title}
-          onChange={handleTitleChange}
-        />
-        <br />
-        <label>Comic Name</label>
-        <br />
-        <input
-          type="text"
-          id="add-post-comic_name"
-          placeholder="Comic by Person"
-          required
-          value={post.comic_name}
-          onChange={handleComicNameChange}
-        />
-        <br />
-        <label>Comic 1st Episode URL</label>
-        <br />
-        <input
-          type="text"
-          id="add-post-comic_url"
-          placeholder="1st Episode URL"
-          required
-          value={post.comic_url}
-          onChange={handleComicUrlChange}
-        />
-        <br />
-        <label>Blog Text</label>
-        <br />
-        <input
-          type="text"
-          id="add-post-blog_content"
-          placeholder="..."
-          required
-          value={post.blog_content}
-          onChange={handleBlogContentChange}
-        />
-        <br />
+        {/* Map the Fields using {...fieldData}
+        The `key=` property needs to be in the map closure for React to handle it, not in the React Component below
+       */}
+        {textFields.map(fieldData => {
+          return <InputTextField key={fieldData.name} {...fieldData} handleChange={handleChange}/>
+        })}
         <label>Header Image</label>
         <br />
         <input
@@ -152,7 +111,8 @@ const BlogForm = (props) => {
           placeholder="Romance, Fantasy"
           required
           value={post.genre}
-          onChange={handleGenreChange}
+          name="genre"
+          onChange={handleChange}
         />
         <br />
         <label>Rating</label>
@@ -174,5 +134,25 @@ const BlogForm = (props) => {
     </form>
   );
 };
+
+const InputTextField = (props) => {
+  return (
+    <>
+      <label htmlFor={props.name}>{props.label}</label>
+      <br />
+      <input
+        type="text"
+        id={"add-post-" + props.name }
+        placeholder={props.placeholder}
+        required
+        // name should match key on post object
+        name={props.name}
+        value={props.value}
+        onChange={props.handleChange}
+      />
+      <br />
+    </>
+  );
+}
 
 export default BlogForm;
