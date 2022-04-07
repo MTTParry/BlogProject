@@ -38,9 +38,46 @@
 }
 
 body {
-  background: url(Textured_BG.png) no-repeat center center fixed; 
+  background: url(Textured_BG.png) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 }
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  width: 80%;
+  background-color: #ebdbfd;
+  border-radius: 10px;
+  margin-left: 5%;
+  margin-bottom: 5%;
+  margin-right: 5%;
+}
+
+.card,
+h3 {
+  padding-top: 5px;
+  text-align: center !important;
+}
+
+.card,
+p {
+  text-align: left;
+  padding: 5%;
+}
+
+.card_img {
+  max-width: 50%;
+  max-height: 50%;
+  float: right;
+}
+
+input[type=text] {
+  width: 80%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+

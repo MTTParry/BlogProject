@@ -45,7 +45,7 @@ app.post("/api/posts", cors(), async (req, res) => {
       comic_url: req.body.comic_url,
       blog_content: req.body.blog_content,
       top_image: req.body.top_image,
-      mid_image: req.body.top_image,
+      mid_image: req.body.mid_image,
       genre: req.body.genre,
       rating: req.body.rating,
     };
@@ -61,10 +61,31 @@ app.post("/api/posts", cors(), async (req, res) => {
 
 //Delete posts by id
 app.delete("/api/posts/:id", async (req, res) => {
-  const contactId = req.params.id;
-  console.log("Deleting contact id #", contactId);
-  await db.query("DELETE FROM contactlist WHERE id=($1)", [contactId]);
+  const postId = req.params.id;
+  console.log("Deleting post id #", postId);
+  await db.query("DELETE FROM posts WHERE id=($1)", [postId]);
   res.send({ status: "successful delete!" });
+});
+
+//Update posts by id
+app.put("/api/posts/:id", async (req, res) => {
+  const postUpdateId = req.params.id;
+  console.log("Updating post id #", postUpdateId);
+  const updatePost = {
+    title: req.body.title,
+    comic_name: req.body.comic_name,
+    comic_url: req.body.comic_url,
+    blog_content: req.body.blog_content,
+    top_image: req.body.top_image,
+    mid_image: req.body.mid_image,
+    genre: req.body.genre,
+    rating: req.body.rating,
+  };
+  await db.query(
+    "UPDATE posts SET title='${updatePost.title}', comic_name='${updatePost.comic_name}', comic_url='${updatePost.comic_url}', blog_content='${updatePost.blog_content}', top_image='${updatePost.top_image}', mid_image='${updatePost.mid_image}', genre='${updatePost.genre}', rating='${updatePost.rating}'  WHERE id=($1)",
+    [postUpdateId]
+  );
+  res.send({ status: "successful update!" });
 });
 
 // console.log that your server is up and running
