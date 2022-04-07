@@ -25,13 +25,31 @@ app.get("/api/posts", cors(), async (req, res) => {
   }
 });
 
-// SUBSCRIBERS
+// SUBSCRIBERS GET
 app.get("/api/subscribers", cors(), async (req, res) => {
   try {
     const { rows: people } = await db.query("SELECT * FROM subscribers;");
     res.send(people);
   } catch (e) {
     return res.status(400).json({ e });
+  }
+});
+
+//SUBSCRIBERS POST request
+app.post("/api/subscribers", cors(), async (req, res) => {
+  console.log("Start server request");
+  try {
+    const newSubscriber = {
+      name: req.body.name,
+      email: req.body.email,
+    };
+    console.log([newSubscriber]);
+    const queryString = `INSERT INTO subscribers (name, email) VALUES ('${newSubscriber.name}', '${newSubscriber.email}') RETURNING *`;
+    const result = await db.query(queryString);
+    console.log("Subscriber added", result.rows[0]);
+    res.json(result.rows[0]);
+  } catch (e) {
+    console.log(e.message);
   }
 });
 
@@ -82,7 +100,7 @@ app.put("/api/posts/:id", async (req, res) => {
     rating: req.body.rating,
   };
   await db.query(
-    "UPDATE posts SET title='${updatePost.title}', comic_name='${updatePost.comic_name}', comic_url='${updatePost.comic_url}', blog_content='${updatePost.blog_content}', top_image='${updatePost.top_image}', mid_image='${updatePost.mid_image}', genre='${updatePost.genre}', rating='${updatePost.rating}'  WHERE id=($1)",
+    "UPDATE posts SET title='${updatePost.title}', comic_name='${updatePost.comic_name}', comic_url='${updatePost.comic_url}', blog_content='${updatePost.blog_content}', top_image='${updatePost.top_image}', mid_image='${updatePost.mid_image}', genre='${updatePost.genre}', rating='${updatePost.rating}'  WHERE id=($1) RETURNING *",
     [postUpdateId]
   );
   res.send({ status: "successful update!" });

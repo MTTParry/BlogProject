@@ -1,5 +1,5 @@
+import React from "react";
 import { useState, useEffect } from "react";
-import BlogForm from "./BlogForm";
 
 function Posts() {
   const [posts, setPosts] = useState([]);
@@ -12,10 +12,6 @@ function Posts() {
       });
   }, []);
 
-  const addPost = (newPost) => {
-    setPosts((posts) => [...posts, newPost]);
-  };
-
   //  const deletePosts
   const deletePost = async (id) => {
     try {
@@ -27,6 +23,20 @@ function Posts() {
       );
       if (deleteResponse.status === 200) {
         setPosts(posts.filter((post) => post.id !== id));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //  const updatePosts
+  const updatePost = async (id) => {
+    try {
+      const putResponse = await fetch(`http://localhost:5005/api/posts/${id}`, {
+        method: "PUT",
+      });
+      if (putResponse.status === 200) {
+        //        setPosts(posts.filter((post) => post.id !== id));
       }
     } catch (error) {
       console.error(error);
@@ -51,6 +61,16 @@ function Posts() {
           </ul>
           <p>{post.blog_content}</p>
           <br />
+
+          <button
+            className="editbuttons"
+            key={post.id}
+            value={post.id}
+            onClick={() => updatePost(post.id)}
+          >
+            Edit {post.title}
+          </button>
+
           <button
             className="deletebuttons"
             key={post.id}
@@ -62,7 +82,6 @@ function Posts() {
           <div className="note">CAREFUL: Delete cannot be undone.</div>
         </div>
       ))}
-      <BlogForm addPost={addPost} />
     </div>
   );
 }
