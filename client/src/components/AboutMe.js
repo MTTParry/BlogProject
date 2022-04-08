@@ -4,8 +4,6 @@ import NavBar from "./Navbar/NavBar";
 const AboutMe = () => {
   return (
     <div className="about-me">
-      {/* <NavBar /> */}
-      <h2>About Me</h2>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Sed adipiscing diam

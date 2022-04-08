@@ -11,19 +11,23 @@ const emptyPost = {
   rating: "",
 };
 
-const AddPost = () => {
-  const [post, setPost] = useState(emptyPost);
+const AddPost = (props) => {
+  //An initial student if there is one in props
+  const {
+    initialPost = {emptyPost},
+  } = props;
+
+  // Initial State
+  const [post, setPost] = useState(initialPost);
 
   //create functions that handle the event of the user typing into the form
   const handleChange = (event) => {
-    // As long as <InputTextField name="XXXXXX"> is the same as the Key in the `post` object, it'll update it
     const name = event.target.name;
     const value = event.target.value;
-    // no idea why [name] works, but it does
     setPost((post) => ({ ...post, [name]: value }));
   };
 
-  //A function to handle the post request
+  //A function to handle the POST request
   const postBlogPost = (newPost) => {
     return fetch("http://localhost:5005/api/posts", {
       method: "POST",
@@ -39,10 +43,32 @@ const AddPost = () => {
       });
   };
 
+
+  //A function to handle the PUT request
+  const putBlogPost = async (existingPost) => {
+    return fetch("http://localhost:5005/api/posts/${existingPost.id}", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(existingPost),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("From the post ", data);
+        props.updatePost(data);
+      });
+  };
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    postBlogPost(post);
-  };
+    if(post.id){
+        putBlogPost(post);
+    } else{
+        postBlogPost(post);
+    }
+};
 
   return (
     <form onSubmit={handleSubmit}>
@@ -148,7 +174,7 @@ const AddPost = () => {
         /10
         <br />
       </fieldset>
-      <button type="submit">Add Post</button>
+      <button type="submit">{!post.id ? "Add Post" : "Save Changes"}</button>
     </form>
   );
 };

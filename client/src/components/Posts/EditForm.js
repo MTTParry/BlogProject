@@ -2,16 +2,20 @@ import { useState } from "react";
 
 const EditPostForm = (props) => {
   //An initial student if there is one in props
-  const {initialPost = { title: "",
-                        comic_name: "",
-                        comic_url: "",
-                        blog_content: "",
-                        top_image: "",
-                        mid_image: "",
-                        genre: "",
-                        rating: ""
-                        }} = props;
+  const {
+    initialPost = {
+      title: "",
+      comic_name: "",
+      comic_url: "",
+      blog_content: "",
+      top_image: "",
+      mid_image: "",
+      genre: "",
+      rating: "",
+    },
+  } = props;
 
+  // Initial State
   const [post, setPost] = useState(initialPost);
 
   //create functions that handle the event of the user typing into the form
@@ -22,38 +26,28 @@ const EditPostForm = (props) => {
     setPost((post) => ({ ...post, [name]: value }));
   };
 
-  //A function to handle the post request
-  const postBlogPost = (newPost) => {
-    return fetch("http://localhost:5005/api/posts", {
+  //A function to handle the PUT request
+  const putBlogPost = async (existingPost) => {
+    return fetch("http://localhost:5005/api/posts/${existingPost.id}", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newPost),
+      body: JSON.stringify(existingPost),
     })
       .then((response) => {
         return response.json();
       })
       .then((data) => {
         console.log("From the post ", data);
-        // props.addPost(data);
+        props.updatePost(data);
       });
   };
 
-  const updatePost = (existingPost) => {
-    return fetch('http://localhost:5005/api/posts/${existingPost.id}', {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(existingPost)
-    })
-  }
-
-
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(post.id) {
-      //update will be here
+    if (post.id) {
+      putBlogPost(post);
     } else {
-      postBlogPost(post);
+      console.log("something's going wrong...");
     }
   };
 
@@ -161,7 +155,7 @@ const EditPostForm = (props) => {
         /10
         <br />
       </fieldset>
-      <button type="submit">{!post.id ? "ADD" : "SAVE"}</button>
+      <button type="submit">SAVE changes</button>
     </form>
   );
 };

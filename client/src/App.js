@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 
 import Posts from "./components/Posts/Posts";
-import AddPost from "./components/AddAPost/AddPost";
+import AddPost from "./components/Posts/AddPost";
 import AboutMe from "./components/AboutMe";
 import ContactMe from "./components/ContactMe";
 import Home from "./components/Home";
@@ -13,8 +13,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
   return (
     <div className="App">
-      <h1>Hi</h1>
-      {/* <AboutMe /> */}
       <Router>
         <NavBar />
         <Routes>

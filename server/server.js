@@ -18,7 +18,9 @@ app.get("/", (req, res) => {
 // BLOG POSTS
 app.get("/api/posts", cors(), async (req, res) => {
   try {
-    const { rows: posts } = await db.query("SELECT * FROM posts;");
+    const { rows: posts } = await db.query(
+      "SELECT * FROM posts ORDER BY creationtimestamp DESC;"
+    );
     res.send(posts);
   } catch (e) {
     return res.status(400).json({ e });
@@ -102,11 +104,20 @@ app.put("/api/posts/:id", async (req, res) => {
   };
   console.log("Updated Post:", updatePost);
   const query =
-    "UPDATE posts SET title='${updatePost.title}', comic_name='${updatePost.comic_name}', comic_url='${updatePost.comic_url}', blog_content='${updatePost.blog_content}', top_image='${updatePost.top_image}', mid_image='${updatePost.mid_image}', genre='${updatePost.genre}', rating='${updatePost.rating}'  WHERE id=($1) RETURNING *";
+    "UPDATE posts SET title='$1', comic_name='$2', comic_url='$3', blog_content='$4', top_image='$5', mid_image='$6', genre='$7', rating='$8'  WHERE id=${postUpdateId} RETURNING *;";
   console.log(query);
-
+  const updateValues = [
+    updatePost.title,
+    updatePost.comic_name,
+    updatePost.comic_url,
+    updatePost.blog_content,
+    updatePost.top_image,
+    updatePost.mid_image,
+    updatePost.genre,
+    updatePost.rating
+  ];
   try {
-    const update = await db.query(query, updatePost);
+    const update = await db.query(query, updateValues);
     console.log(update.rows[0]);
     res.send(update.rows[0]);
   } catch (e) {
