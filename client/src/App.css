@@ -81,3 +81,6 @@ input[type=text] {
   box-sizing: border-box;
 }
 
+textarea {
+  width: 80%;
+}

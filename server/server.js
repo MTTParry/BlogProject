@@ -103,8 +103,7 @@ app.put("/api/posts/:id", async (req, res) => {
     rating: req.body.rating,
   };
   console.log("Updated Post:", updatePost);
-  const query =
-    "UPDATE posts SET title='$1', comic_name='$2', comic_url='$3', blog_content='$4', top_image='$5', mid_image='$6', genre='$7', rating='$8'  WHERE id=${postUpdateId} RETURNING *;";
+  const query = `UPDATE posts SET title=$1, comic_name=$2, comic_url=$3, blog_content=$4, top_image=$5, mid_image=$6, genre=$7, rating=$8  WHERE id=${postUpdateId} RETURNING *;`;
   console.log(query);
   const updateValues = [
     updatePost.title,
@@ -114,7 +113,7 @@ app.put("/api/posts/:id", async (req, res) => {
     updatePost.top_image,
     updatePost.mid_image,
     updatePost.genre,
-    updatePost.rating
+    updatePost.rating,
   ];
   try {
     const update = await db.query(query, updateValues);

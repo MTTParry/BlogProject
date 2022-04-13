@@ -13,9 +13,7 @@ const emptyPost = {
 
 const AddPost = (props) => {
   //An initial student if there is one in props
-  const {
-    initialPost = {emptyPost},
-  } = props;
+  const { initialPost = { emptyPost } } = props;
 
   // Initial State
   const [post, setPost] = useState(initialPost);
@@ -43,11 +41,10 @@ const AddPost = (props) => {
       });
   };
 
-
   //A function to handle the PUT request
   const putBlogPost = async (existingPost) => {
-    return fetch("http://localhost:5005/api/posts/${existingPost.id}", {
-      method: "POST",
+    return fetch(`http://localhost:5005/api/posts/${existingPost.id}`, {
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(existingPost),
     })
@@ -60,15 +57,14 @@ const AddPost = (props) => {
       });
   };
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(post.id){
-        putBlogPost(post);
-    } else{
-        postBlogPost(post);
+    if (post.id) {
+      putBlogPost(post);
+    } else {
+      postBlogPost(post);
     }
-};
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -112,7 +108,9 @@ const AddPost = (props) => {
         <br />
         <label>Blog Text</label>
         <br />
-        <input
+        <textarea
+          rows="5"
+          className="blog_content"
           type="text"
           id="add-post-blog_content"
           placeholder="..."
